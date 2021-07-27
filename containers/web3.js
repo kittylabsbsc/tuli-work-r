@@ -90,13 +90,13 @@ function useWeb3() {
    * @param {String} description of media
    * @param {Number} fee to share with previous owner
    */
-  const mintMedia = async (file, name, description, fee) => {
-    // Generate metadataJSON
-    const metadataJSON = generateMetadata("tuli-20210101", {
-      description: description ? description : "",
+   const mintMedia = async (file, name, description, fee) => {
+    const metadataJSON = generateMetadata("tuli-20210718", {
+      image_url: `ipfs://bafybeihustzhkcxiihurve74fjud6ru53sfff7oqg4ga5bgv3bwuwyybci`,
       mimeType: file.type,
       name: name,
-      version: "tuli-20210101",
+      description: "",
+      version: "tuli-20210718",
     });
 
     // Generate media buffer
@@ -115,12 +115,12 @@ function useWeb3() {
     // Post upload endpoint
     const upload = await axios.post("/api/upload", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     });
 
     // Collect fileUrl and metadataUrl from Fleek
-    const { fileUrl, metadataUrl } = upload.data;
+    const {fileUrl, imageUrl, metadataUrl} = upload.data;
 
     // Construct mediaData object
     const mediaData = constructMediaData(

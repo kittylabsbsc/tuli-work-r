@@ -1,6 +1,5 @@
 import fs from "fs"; // Filesystem
 import { promisify } from "util"; // Promisify fs
-import { v4 as uuid } from "uuid"; // UUID generation
 import formidable from "formidable"; // Formidable form handling
 import fleekStorage from "@fleekhq/fleek-storage-js"; // Fleek storage
 
@@ -28,37 +27,38 @@ export default async (req, res) => {
     });
   });
 
-  // Collect file and metadataJSON from POST request
-  const { name, metadata } = data.fields;
 
-  // Collect uploaded media
+  const { name, metadata } = data.fields;
   const { upload: file } = data.files;
   const fileData = await readFileAsync(file.path);
 
-  // If file, name, and metadata provided
-  if (fileData && name && metadata) {
-    // Upload media to Fleek
-    const { publicUrl: fileUrl } = await fleekStorage.upload({
+
+if(fileData && name && metadata)
+  {
+    const date = new Date();
+    const timestamp = date.getTime();
+    const { hash: fileIPFSUrl } = await fleekStorage.upload({
       ...fleekAuth,
-      key: uuid(),
+      key: `${timestamp}`,
       data: fileData,
     });
 
-    // Upload metdata to Fleek
-    const { publicUrl: metadataUrl } = await fleekStorage.upload({
+    const fileUrl = `https://ipfs.io/ipfs/${fileIPFSUrl}`;
+    const imageUrl = `ipfs://${fileIPFSUrl}`;
+
+    const { hash: metadataIPFSUrl } = await fleekStorage.upload({
       ...fleekAuth,
-      key: uuid(),
+      key: `${timestamp}`,
       data: metadata,
     });
 
-    // Return fileUrl and metadataUrl
-    res.send({ fileUrl, metadataUrl });
+    const metadataUrl = `https://ipfs.io/ipfs/${metadataIPFSUrl}`;
+
+    res.send({ fileUrl, imageUrl, metadataUrl });
+
   } else {
-    // Else, return 501
     res.status(501);
   }
-
-  // End
   res.end();
 };
 
@@ -68,3 +68,4 @@ export const config = {
     bodyParser: false,
   },
 };
+

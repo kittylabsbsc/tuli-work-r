@@ -95,7 +95,7 @@ function useWeb3() {
       image_url: `ipfs://bafybeihustzhkcxiihurve74fjud6ru53sfff7oqg4ga5bgv3bwuwyybci`,
       mimeType: file.type,
       name: name,
-      description: "",
+      description: description ? description: "",
       version: "tuli-20210718",
     });
 

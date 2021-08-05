@@ -43,7 +43,7 @@ if(fileData && name && metadata)
       data: fileData,
     });
 
-    const fileUrl = `https://ipfs.io/ipfs/${fileIPFSUrl}`;
+    const fileUrl = `https://ipfs.infura.io/ipfs/${fileIPFSUrl}`;
     const imageUrl = `ipfs://${fileIPFSUrl}`;
 
     const { hash: metadataIPFSUrl } = await fleekStorage.upload({
@@ -52,7 +52,7 @@ if(fileData && name && metadata)
       data: metadata,
     });
 
-    const metadataUrl = `https://ipfs.io/ipfs/${metadataIPFSUrl}`;
+    const metadataUrl = `https://ipfs.infura.io/ipfs/${metadataIPFSUrl}`;
 
     res.send({ fileUrl, imageUrl, metadataUrl });
 
